@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IDF WebPanel</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --fg: #e7ecf1;
+      --muted: #8b98a5;
+      --accent: #3d9cf0;
+      --panel: color-mix(in srgb, #1a2330 88%, transparent);
+      --line: color-mix(in srgb, var(--fg) 12%, transparent);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #1a2a3a 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #152033 0%, transparent 50%),
+        var(--bg);
+      color: var(--fg);
+      display: grid;
+      place-items: center;
+      padding: 2rem 1.25rem;
+    }
+
+    main {
+      width: min(100%, 40rem);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    @media (max-width: 520px) {
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.35rem 1.4rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .metric-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.875rem;
+      letter-spacing: 0.02em;
+    }
+
+    .metric-value {
+      margin: 0.65rem 0 0;
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(2rem, 6vw, 2.75rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      transition: color 180ms ease;
+    }
+
+    .metric-unit {
+      margin-left: 0.35rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1 id="title"></h1>
+    </header>
+
+    <section class="metrics" id="metrics" aria-label="Metrics"></section>
+  </main>
+
+  <script>
+    const titleEl = document.getElementById("title");
+    const metricsEl = document.getElementById("metrics");
+    const valueEls = new Map();
+    const decimalsById = new Map();
+
+    function ensureMetricCard(metric) {
+      let valueEl = valueEls.get(metric.id);
+      if (valueEl) return valueEl;
+
+      const article = document.createElement("article");
+      article.className = "metric";
+      article.dataset.id = metric.id;
+
+      const label = document.createElement("p");
+      label.className = "metric-label";
+      label.textContent = metric.title;
+
+      const valueWrap = document.createElement("p");
+      valueWrap.className = "metric-value";
+
+      valueEl = document.createElement("span");
+      valueEl.textContent = "—";
+
+      const unit = document.createElement("span");
+      unit.className = "metric-unit";
+      unit.textContent = metric.unit;
+
+      valueWrap.append(valueEl, unit);
+      article.append(label, valueWrap);
+      metricsEl.append(article);
+      valueEls.set(metric.id, valueEl);
+      return valueEl;
+    }
+
+    function applyLayout(data) {
+      titleEl.textContent = data.title;
+      document.title = data.title;
+      for (const metric of data.metrics) {
+        ensureMetricCard(metric);
+        const decimals = Number.isFinite(metric.decimals) ? metric.decimals : 1;
+        decimalsById.set(metric.id, decimals);
+      }
+    }
+
+    function renderValues(metrics) {
+      for (const metric of metrics) {
+        const valueEl = valueEls.get(metric.id);
+        if (!valueEl) continue;
+        const decimals = decimalsById.get(metric.id) ?? 1;
+        valueEl.textContent = Number(metric.value).toFixed(decimals);
+      }
+    }
+
+    async function loadLayout() {
+      const res = await fetch("/api/layout", { cache: "no-store" });
+      if (!res.ok) throw new Error("bad status");
+      const data = await res.json();
+      if (!data || typeof data.title !== "string" || !Array.isArray(data.metrics)) {
+        throw new Error("bad payload");
+      }
+      applyLayout(data);
+    }
+
+    async function refreshValues() {
+      try {
+        const res = await fetch("/api/metrics", { cache: "no-store" });
+        if (!res.ok) throw new Error("bad status");
+        const data = await res.json();
+        if (!data || !Array.isArray(data.metrics)) {
+          throw new Error("bad payload");
+        }
+        renderValues(data.metrics);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadLayout()
+      .then(() => {
+        refreshValues();
+        setInterval(refreshValues, 1000);
+      })
+      .catch((err) => console.error(err));
+  </script>
+</body>
+
+</html>

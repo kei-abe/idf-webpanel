@@ -1,0 +1,9 @@
+# PsychicHttp / esp_http_server
+CONFIG_HTTPD_WS_SUPPORT=y
+
+# HTTP only. On ESP-IDF 6.1, HTTPD_SSL_CONFIG_DEFAULT leaves
+# use_secure_element uninitialized and trips -Werror, so disable HTTPS.
+# CONFIG_ESP_HTTPS_SERVER_ENABLE is not set
+
+# PsychicHttp digest auth calls mbedtls_md5_* directly, so disable ROM-only MD5.
+# CONFIG_MBEDTLS_ROM_MD5 is not set
