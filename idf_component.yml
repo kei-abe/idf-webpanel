@@ -1,4 +1,25 @@
 ## IDF Component Manager
+version: "0.0.2"
+description: "Simple HTTP metrics dashboard for ESP-IDF with mDNS discovery"
+url: "https://github.com/kei-abe/idf-webpanel"
+repository: "https://github.com/kei-abe/idf-webpanel.git"
+issues: "https://github.com/kei-abe/idf-webpanel/issues"
+documentation: "https://github.com/kei-abe/idf-webpanel#readme"
+license: "MIT"
+maintainers:
+  - "Keisuke Abe <abe.keisuke00@gmail.com>"
+tags:
+  - web
+  - http
+  - dashboard
+  - mdns
+  - metrics
+files:
+  use_gitignore: true
+  exclude:
+    - ".devcontainer/**/*"
+    - ".clangd"
 dependencies:
+  idf: ">=5.0"
   bblanchon/arduinojson: "^7.4.3"
   espressif/mdns: "^1.2.0"
