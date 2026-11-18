@@ -1,6 +1,6 @@
 # idf-webpanel
 
-A simple metrics panel for ESP-IDF. View board cards (temperature, humidity, and more) from a web browser.
+A simple metrics panel for ESP-IDF.
 
 ## Quick start (`examples/panel`)
 
