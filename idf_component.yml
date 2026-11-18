@@ -1,5 +1,5 @@
 ## IDF Component Manager
-version: "0.0.2"
+version: "0.0.3"
 description: "Simple HTTP metrics dashboard for ESP-IDF with mDNS discovery"
 url: "https://github.com/kei-abe/idf-webpanel"
 repository: "https://github.com/kei-abe/idf-webpanel.git"
