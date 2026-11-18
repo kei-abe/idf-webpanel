@@ -1,4 +1,5 @@
 # idf-webpanel
+![Sample Board dashboard](https://raw.githubusercontent.com/kei-abe/idf-webpanel/v0.0.2/docs/sample.png)
 
 A simple metrics panel for ESP-IDF.
 
@@ -41,10 +42,6 @@ http://sample.local/
 ```
 
 > **Note:** If mDNS (`.local`) is unavailable, use the IP address printed in the serial log instead.
-
-### Screenshots
-
-![Sample Board dashboard](docs/sample.png)
 
 ## What the sample does
 
