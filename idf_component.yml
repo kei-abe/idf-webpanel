@@ -1,6 +1,4 @@
 ## IDF Component Manager
 dependencies:
   bblanchon/arduinojson: "^7.4.3"
-  PsychicHttp:
-    git: https://github.com/hoeken/PsychicHttp.git
   espressif/mdns: "^1.2.0"

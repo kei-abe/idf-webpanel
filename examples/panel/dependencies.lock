@@ -1,16 +1,4 @@
 dependencies:
-  PsychicHttp:
-    component_hash: 109ccfc3964d2239b2f6299c5b828396d894aa3bbc8f4ccf48b54344682077fa
-    dependencies:
-    - name: idf
-      version: '>=4.4'
-    - name: bblanchon/arduinojson
-      version: ^7
-    source:
-      git: https://github.com/hoeken/PsychicHttp.git
-      path: .
-      type: git
-    version: 418a3285290aa13a0e2941f58b571453d6701d17
   bblanchon/arduinojson:
     component_hash: 5e6aff2bc5bc988b36c8e90c01e637495ee895ad3af93911860c21ec6da79b6a
     dependencies: []
@@ -158,7 +146,7 @@ dependencies:
       type: service
     version: 1.4.1
   espressif/mdns:
-    component_hash: 2fa43caa78cc170842255bc7bf71f306bc815cae12e9496bfb12372423019ac7
+    component_hash: 3ba256ac95e07c274be53cbd73f06cb846c403b61e8fbdf1be57bdb79db7a63e
     dependencies:
     - name: idf
       require: private
@@ -166,7 +154,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 1.15.1
+    version: 1.12.0
   idf:
     source:
       type: idf
@@ -175,8 +163,6 @@ dependencies:
     dependencies:
     - name: bblanchon/arduinojson
       version: ^7.4.3
-    - git: https://github.com/hoeken/PsychicHttp.git
-      name: PsychicHttp
     - name: espressif/mdns
       version: ^1.2.0
     source:
